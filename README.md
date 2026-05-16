@@ -2,12 +2,29 @@
 
 <div align="center">
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)
-![PyQt6](https://img.shields.io/badge/PyQt6-GUI-success?logo=qt)
-![Google Maps API](https://img.shields.io/badge/Google_Maps-API-red?logo=googlemaps)
-![SQLite](https://img.shields.io/badge/SQLite-Database-07405E?logo=sqlite)
-![License](https://img.shields.io/badge/License-MIT-yellow)
-![Status](https://img.shields.io/badge/Status-Active-success)
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=for-the-badge&logo=python&logoColor=white"/>
+  <img src="https://img.shields.io/badge/PyQt6-Desktop_GUI-41CD52?style=for-the-badge&logo=qt&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Google_Maps-API-EA4335?style=for-the-badge&logo=googlemaps&logoColor=white"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/SQLite-Offline_Database-003B57?style=for-the-badge&logo=sqlite&logoColor=white"/>
+  <img src="https://img.shields.io/badge/Shapely-Geospatial_Engine-2E8B57?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/PyProj-Coordinate_Projection-FF6F00?style=for-the-badge"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/stars/yourusername/land-measurer?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/forks/yourusername/land-measurer?style=for-the-badge"/>
+  <img src="https://img.shields.io/github/issues/yourusername/land-measurer?style=for-the-badge"/>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/License-MIT-FFD43B?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Status-Active-00C853?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blueviolet?style=for-the-badge"/>
+</p>
 
 ### 🛰️ High-Precision Geospatial Land Measurement & Mapping Platform
 
