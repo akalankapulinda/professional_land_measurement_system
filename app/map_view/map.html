@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Land Measurement Map</title>
+    <style>
+        html, body, #map {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        /* Custom search bar styling */
+       #search-container {
+            position: absolute;
+            top: 10px;
+            right: 10px; /* Moves the container to the right edge */
+            z-index: 5;
+            background-color: #fff;
+            padding: 5px;
+            border-radius: 4px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+            display: flex;
+            gap: 5px;
+        }
+        
+        #address-input {
+            width: 250px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            font-size: 14px;
+            outline: none;
+        }
+        #search-btn {
+            padding: 8px 15px;
+            background-color: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        #search-btn:hover {
+            background-color: #34495e;
+        }
+    </style>
+    <script src="qrc:///qtwebchannel/qwebchannel.js"></script>
+</head>
+<body>
+    
+    <div id="search-container">
+        <input id="address-input" type="text" placeholder="Type city, street, or landmark..." />
+        <button id="search-btn">Search</button>
+    </div>
+
+    <div id="map"></div>
+
+    <script>
+        let map;
+        let drawingManager;
+        let pythonBridge;
+        let searchMarker = null;
+
+        new QWebChannel(qt.webChannelTransport, function (channel) {
+            pythonBridge = channel.objects.pyBridge;
+        });
+
+        function initMap() {
+            const defaultLocation = { lat: 6.9271, lng: 79.8612 }; 
+
+            map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 15,
+                center: defaultLocation,
+                mapTypeId: 'satellite',
+                mapTypeControl: true
+            });
+
+            // --- STANDARD GEOCODER LOGIC (No Places API needed) ---
+            const geocoder = new google.maps.Geocoder();
+            const inputField = document.getElementById('address-input');
+            const searchBtn = document.getElementById('search-btn');
+
+            function performSearch() {
+                const address = inputField.value;
+                if (address === '') return;
+
+                geocoder.geocode({ 'address': address }, function(results, status) {
+                    if (status === 'OK') {
+                        // Remove old marker if it exists
+                        if (searchMarker) searchMarker.setMap(null);
+
+                        // Center map on result
+                        map.setCenter(results[0].geometry.location);
+                        map.setZoom(17); // Zoom in close to the location
+
+                        // Drop a marker
+                        searchMarker = new google.maps.Marker({
+                            map: map,
+                            position: results[0].geometry.location,
+                            animation: google.maps.Animation.DROP,
+                            title: address
+                        });
+                    } else {
+                        alert('Could not find location: ' + status);
+                    }
+                });
+            }
+
+            // Trigger search on button click
+            searchBtn.addEventListener('click', performSearch);
+
+            // Trigger search when pressing "Enter" in the text box
+            inputField.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            // -----------------------------------------------------
+
+            // --- DRAWING LOGIC ---
+            drawingManager = new google.maps.drawing.DrawingManager({
+                drawingMode: google.maps.drawing.OverlayType.POLYGON,
+                drawingControl: true,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: ['polygon']
+                },
+                polygonOptions: {
+                    fillColor: '#2ecc71',
+                    fillOpacity: 0.4,
+                    strokeWeight: 2,
+                    clickable: true,
+                    editable: true,
+                    zIndex: 1
+                }
+            });
+            drawingManager.setMap(map);
+
+            google.maps.event.addListener(drawingManager, 'polygoncomplete', function (polygon) {
+                const path = polygon.getPath();
+                let coordinates = [];
+
+                for (let i = 0; i < path.getLength(); i++) {
+                    const xy = path.getAt(i);
+                    coordinates.push({ lat: xy.lat(), lng: xy.lng() });
+                }
+
+                if (pythonBridge) {
+                    pythonBridge.receive_coordinates(JSON.stringify(coordinates));
+                }
+            });
+        }
+    </script>
+    
+    <script src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAPS_API_KEY}}&libraries=drawing,geometry&callback=initMap" async defer></script>
+</body>
+</html>
