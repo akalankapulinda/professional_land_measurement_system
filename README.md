@@ -15,12 +15,6 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/stars/yourusername/land-measurer?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/forks/yourusername/land-measurer?style=for-the-badge"/>
-  <img src="https://img.shields.io/github/issues/yourusername/land-measurer?style=for-the-badge"/>
-</p>
-
-<p align="center">
   <img src="https://img.shields.io/badge/License-MIT-FFD43B?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/Status-Active-00C853?style=for-the-badge"/>
   <img src="https://img.shields.io/badge/Platform-Windows%20%7C%20Linux%20%7C%20macOS-blueviolet?style=for-the-badge"/>
